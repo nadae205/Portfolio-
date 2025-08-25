@@ -1,0 +1,106 @@
+/* mobile.css — loaded only on small screens
+   Targets your existing classes; no HTML changes needed */
+
+/* Make sure the viewport height is stable on iOS */
+html, body { height: 100dvh; overflow: hidden; }
+
+/* ====== INDEX (landing) overrides ====== */
+
+/* Nudge ground + keep grass visible */
+:root{
+  --ground: 8%;
+  --grass-sink: 6%;
+}
+
+/* Keep the stage within the phone and prevent cropping */
+.stage{
+  width: 100vw;
+  max-height: 100dvh;
+}
+
+/* Grass: a bit wider and anchored */
+.grass{
+  bottom: calc(-1 * var(--grass-sink));
+  width: 140%;
+}
+
+/* Sun: bigger, tappable */
+.sun{
+  width: 40%;
+  top: 3%;
+  right: 3%;
+  pointer-events: auto;       /* ensure taps are captured */
+}
+
+/* Ensure the about link wrapping the sun is interactive */
+.sun-link,
+.sun-link img{
+  pointer-events: auto;
+}
+
+/* Hunny pot: bigger, raised, always above grass */
+.hunny{
+  width: 26%;
+  right: 6%;
+  bottom: calc(var(--ground) + 4%);
+  z-index: 20;
+}
+
+/* Characters slightly tighter so they fit */
+.pooh-wrap{ left: 22%; width: 20%; }
+.cow-wrap { left: 44%; width: 12%; }
+.pig-wrap { left: 62%; width: 19%; }
+
+/* Bees a bit smaller so they don’t cover UI */
+.bee  { width: 18%; }
+.bee2 { width: 14%; left: 62%; top: 26%; }
+
+/* Optional: reduce blossom size if it crowds */
+.blossom{ width: 50%; left: -4%; bottom: -3%; }
+
+/* If your invisible .hit buttons exist, keep them aligned */
+.hunny-hit{ right: 6%; bottom: calc(var(--ground) + 4%); width: 26%; height: 24%; }
+.sun-hit  { right: 3%; top: 3%; width: 40%; height: 32%; }
+
+/* ====== PROJECTS page overrides ====== */
+
+.scene{
+  height: calc(100dvh - 80px); /* keep under header */
+  overflow: hidden;
+}
+
+/* Keep grass showing */
+.grass{
+  bottom: -60px;
+  width: 150%;
+}
+
+/* Make the sun a touch larger for balance */
+.sun{
+  width: 18%;
+  top: 4%;
+  right: 4%;
+}
+
+/* Tree + bird so they read well on phones */
+.tree{ width: 40%; left: 2%; }
+.bird{ width: 12%; left: 24%; bottom: 8%; }
+
+/* Bees / butterflies slightly smaller */
+.bee{ width: 12%; }
+.butterfly{ width: 10%; }
+
+/* Honeycomb grid stays high and a tad larger */
+.honeycomb-wrap{
+  top: 14%;
+  transform: translateX(-50%) scale(1.05);
+  transform-origin: top center;
+}
+.honeycomb-wrap svg{
+  width: 108%;
+  overflow: visible;     /* avoid clipping on hover scale */
+}
+
+/* Snail + track a bit thicker for visibility */
+.snail-wrap{ width: 9%; }
+.snail-track{ height: 7px; bottom: 7.2%; }}
