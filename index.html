@@ -104,27 +104,40 @@
     100% { transform: translate(-46vw,  1vh) rotate(-6deg); }
   }
 
-  /* Hunny pot */
-  .hunny {
-    position: absolute;
-    right: 10%;
-    width: 18%;
-    height: auto;
-    bottom: calc(var(--ground) + 6%);
-    z-index:4;
-  }
+ /* Hunny & Sun: clickable wrappers handle position + z-index */
+.hunny-link{
+  position:absolute;
+  right:10%;
+  bottom:calc(var(--ground) + 6%);
+  width:18%;
+  z-index:20;
+  display:block;
+}
+.sun-link{
+  position:absolute;
+  top:5%;
+  right:5%;
+  width:30%;
+  z-index:21;
+  display:block;
+}
 
-  /* Sun (with About cloud attached) */
-  .sun {
-    position: absolute;
-    top: 5%;
-    right: 5%;
-    width: 30%;
-    height: auto;
-    z-index: 999;        /* stay above bees */
-    pointer-events: auto;/* art only; we use a hit-area for clicks */
-  }
+/* Images just fill their wrappers (no absolute, no pointer-events hacks) */
+.hunny, .sun{
+  display:block;
+  width:100%;
+  height:auto;
+  transition: transform .3s ease, filter .3s ease;
+}
+.hunny{ filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
 
+@media (hover:hover){
+  .hunny-link:hover .hunny,
+  .sun-link:hover .sun{
+    transform: scale(1.08) rotate(-2deg);
+    filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
+  }
+}
   /* Shadows for pop */
   .pooh, .cow, .pig, .hunny { filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
 
@@ -217,7 +230,7 @@
     <img src="bee2.png" class="bee2" alt="Bee 2">
 
     <!-- Hunny pot art (link to Projects) -->
-    <a href="projects.html" aria-label="Projects">
+    <a href="projects.html" class="hunny-link" aria-label="Projects">
       <img src="hunny.png" class="hunny" alt="Projects">
     </a>
 
