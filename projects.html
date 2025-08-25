@@ -1,0 +1,284 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Nada — Projects</title>
+  <style>
+
+    /* ===== Base ===== */
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:#fffbee;
+      overflow:hidden;
+    }
+    header{
+      width:100%;
+      padding:1.2rem 2rem;
+      background:#f9d86d;
+      color:#4b3621;
+      font-weight:bold;
+      font-size:1.6rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 4px 10px rgba(0,0,0,.1);
+      position:relative;
+      z-index:20;
+    }
+    header a{ color:#4b3621; text-decoration:none; font-size:1rem; }
+    h1{
+      margin:1rem 0;
+      font-size:2rem;
+      text-align:center;
+      color:#4b3621;
+      position:relative;
+      z-index:20;
+    }
+    .scene{
+      position:relative;
+      width:100%;
+      height:calc(100vh - 80px); /* minus header height */
+      overflow:hidden;
+      background:#fffbee;
+    }
+
+    /* ===== Ground & scenery ===== */
+    .grass{
+      position:absolute; left:50%; transform:translateX(-50%);
+      bottom:-100px; width:130%; height:auto; z-index:5;
+    }
+    .tree{
+      position:absolute; bottom:0; left:3%;
+      width:28%; height:auto; z-index:6;
+    }
+
+    /* ===== Sun (rotating) ===== */
+    .sun{
+      position:absolute; top:4%; right:3%;
+      width:10%; height:auto; z-index:18;
+      animation:spin 24s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes spin{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+    /* ===== Honeycombs (stay near top) ===== */
+    .honeycomb-wrap{
+      position:absolute; top:12%; left:50%; transform:translateX(-50%);
+      width:100%; max-width:1100px; z-index:10;
+      display:flex; justify-content:center; align-items:center;
+    }
+    /* --- Stabilize hex hover --- */
+/* --- Stable hex hover (no flicker) --- */
+svg { width:100%; height:auto; overflow: visible; }
+
+.hex { cursor: pointer; }
+
+/* children scale smoothly, group doesn't */
+.hex .hex-shape,
+.hex text{
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+/* transparent rect = fixed hit area that doesn't scale */
+.hex .hit{
+  fill: transparent;
+  pointer-events: all;     /* receives hover/click */
+}
+
+/* only scale the visual bits */
+.hex:hover .hex-shape,
+.hex:hover text{
+  transform: scale(1.06);
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.2));
+}
+.hex:active .hex-shape,
+.hex:active text{
+  transform: scale(1.02);
+}
+.hex text{
+  font-size:24px; fill:#4b3621; user-select:none; font-weight:bold;
+}
+    /* ===== Bees ===== */
+    .bee{ position:absolute; width:10%; height:auto; z-index:15; pointer-events:none; }
+    .bee1{ top:20%; left:10%;  animation:beeFly1 9s ease-in-out infinite alternate; }
+    .bee2{ top:35%; right:10%; animation:beeFly2 11s ease-in-out infinite alternate-reverse; }
+    @keyframes beeFly1{
+      0%{transform:translate(0,0) rotate(0)}
+      25%{transform:translate(12vw,-3vh) rotate(8deg)}
+      50%{transform:translate(24vw, 2vh) rotate(-6deg)}
+      75%{transform:translate(36vw,-3vh) rotate(10deg)}
+      100%{transform:translate(44vw, 1vh) rotate(-4deg)}
+    }
+    @keyframes beeFly2{
+      0%{transform:translate(0,0) rotate(0)}
+      20%{transform:translate(-10vw,-2vh) rotate(-8deg)}
+      40%{transform:translate(-22vw, 3vh) rotate(6deg)}
+      60%{transform:translate(-32vw,-1vh) rotate(-10deg)}
+      80%{transform:translate(-40vw, 4vh) rotate(4deg)}
+      100%{transform:translate(-46vw, 1vh) rotate(-6deg)}
+    }
+
+    /* ===== Butterflies ===== */
+    .butterfly{ position:absolute; width:8%; height:auto; z-index:16; pointer-events:none; }
+    .butterfly1{ top:6%; left:0%;  animation:flutter1 12s ease-in-out infinite alternate; }
+    .butterfly2{ top:60%; right:10%; animation:flutter2 14s ease-in-out infinite alternate-reverse; }
+    @keyframes flutter1{
+      0%{transform:translate(0,0) rotate(0)   scale(1)}
+      25%{transform:translate(8vw,-4vh) rotate(10deg) scale(1.05)}
+      50%{transform:translate(18vw, 2vh) rotate(-8deg) scale(0.95)}
+      75%{transform:translate(28vw,-3vh) rotate(12deg) scale(1.1)}
+      100%{transform:translate(36vw, 0)  rotate(-6deg) scale(1)}
+    }
+    @keyframes flutter2{
+      0%{transform:translate(0,0) rotate(0)   scale(1)}
+      20%{transform:translate(-8vw,-2vh) rotate(-10deg) scale(1.1)}
+      40%{transform:translate(-18vw, 3vh) rotate(6deg)  scale(0.9)}
+      60%{transform:translate(-28vw,-1vh) rotate(-12deg) scale(1.05)}
+      80%{transform:translate(-36vw, 4vh) rotate(4deg)  scale(1)}
+      100%{transform:translate(-42vw, 0)  rotate(-6deg) scale(1)}
+    }
+
+    /* ===== Bird — stationary by the tree ===== */
+    .bird{
+      position:absolute; bottom:8%; left:25%; /* snug near trunk */
+      width:7%; height:auto; z-index:7; pointer-events:none;
+      /* no animation */
+    }
+
+    /* ===== Snail — crawling along the floor with a trail ===== */
+    .snail-track{
+      position:absolute; left:10%; bottom:7.5%;
+      width:70vw; height:6px; z-index:6; pointer-events:none;
+      background: linear-gradient(90deg,
+        rgba(190,255,210,0) 0%,
+        rgba(190,255,210,.45) 12%,
+        rgba(190,255,210,.22) 70%,
+        rgba(190,255,210,0) 100%);
+      border-radius:4px;
+      opacity:.65;
+      /* grow with the crawl */
+      transform-origin:left center;
+      animation:trailGrow 28s linear infinite;
+    }
+    @keyframes trailGrow{
+      0%{ transform:scaleX(0); opacity:.0; }
+      10%{ opacity:.65; }
+      100%{ transform:scaleX(1); opacity:.65; }
+    }
+    .snail-wrap{
+      position:absolute; left:10%; bottom:8%;
+      width:7%; z-index:8; animation:snailCrawl 28s linear infinite;
+    }
+    .snail-wrap img{ width:100%; height:auto; display:block;
+      filter: drop-shadow(2px 4px 3px rgba(0,0,0,.2)); }
+    @keyframes snailCrawl{
+      0%  { transform:translateX(0)    scaleX(1); }
+      49% { transform:translateX(70vw) scaleX(1); }
+      50% { transform:translateX(70vw) scaleX(-1); } /* turn around */
+      99% { transform:translateX(0)    scaleX(-1); }
+      100%{ transform:translateX(0)    scaleX(1); }
+    }
+
+    /* ===== Small screens ===== */
+    @media (max-width: 640px){
+      .sun{ width:14%; }
+      .bee{ width:12%; }
+      .butterfly{ width:10%; }
+      .bird{ width:9%; left:22%; }
+      .snail-wrap{ width:9%; }
+      .honeycomb-wrap{ top:14%; }
+    }
+
+  </style>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Nada — Projects</title>
+  <style>
+    /* ... all your CSS here ... */
+  </style>
+
+  <!-- History shim: ensures browser back arrow goes to index.html -->
+  <script>
+    (function () {
+      const cameFromIndex = document.referrer.includes('index.html');
+      if (!cameFromIndex) {
+        history.replaceState(null, '', 'index.html');
+        history.pushState(null, '', 'projects.html');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <span>🍯 Nada’s Projects</span>
+    <a href="index.html">← Back to Spring</a>
+  </header>
+
+  <h1>Featured Work</h1>
+
+  <div class="scene">
+    <!-- Sun (rotating) -->
+    <img src="sun2.png" class="sun" alt="Sun">
+
+    <!-- Apple tree -->
+    <img src="tree.png" class="tree" alt="Apple Tree">
+
+    <!-- Bird (stationary by the tree) -->
+    <img src="bird.png" class="bird" alt="Bird">
+
+    <!-- Bees -->
+    <img src="bee1.png" class="bee bee1" alt="Bee 1">
+    <img src="bee2.png" class="bee bee2" alt="Bee 2">
+
+    <!-- Butterflies -->
+    <img src="butterfly1.png" class="butterfly butterfly1" alt="Butterfly 1">
+    <img src="butterfly2.png" class="butterfly butterfly2" alt="Butterfly 2">
+
+    <!-- Snail + slimy trail -->
+    <div class="snail-track" aria-hidden="true"></div>
+    <div class="snail-wrap">
+      <img src="snail.png" alt="Snail">
+    </div>
+
+    <!-- Honeycombs (top center) -->
+    <div class="honeycomb-wrap">
+      <svg viewBox="0 0 1200 900">
+        <!-- Hexagon 1 -->
+        <g class="hex" onclick="window.open('https://habit-w8b3.vercel.app/', '_blank')">
+          <polygon points="300,150 400,210 400,330 300,390 200,330 200,210"
+                   fill="#f9d86d" stroke="#d6b656" stroke-width="5"/>
+          <text x="300" y="280" text-anchor="middle">Habit App</text>
+        </g>
+
+        <!-- Hexagon 2 (→ music-q link) -->
+        <g class="hex" transform="translate(300,160)"
+           onclick="window.open('https://music-q.vercel.app', '_blank')">
+          <polygon points="300,150 400,210 400,330 300,390 200,330 200,210"
+                   fill="#fce38a" stroke="#d6b656" stroke-width="5"/>
+          <text x="300" y="280" text-anchor="middle">Music Quiz</text>
+        </g>
+
+        <!-- Hexagon 3 -->
+        <!-- Hexagon 3 (→ Battleship repo) -->
+<g class="hex" transform="translate(600,0)"
+   onclick="window.open('https://github.com/nadae205/Battleship', '_blank')">
+  <polygon points="300,150 400,210 400,330 300,390 200,330 200,210"
+           fill="#fff4b0" stroke="#d6b656" stroke-width="5"/>
+  <text x="300" y="280" text-anchor="middle">Battleship</text>
+</g>
+      </svg>
+    </div>
+
+    <!-- Grass -->
+    <img src="grass.png" class="grass" alt="Grass">
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nada — Spring (bottom-anchored)</title>
+<style>
+  /* Page background only; no flex pushing */
+  html, body {
+    margin: 0;
+    height: 100dvh;               /* dynamic viewport prevents jumping */
+    background: #cfeeff;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    overflow: hidden;             /* no scroll bounce */
+  }
+
+  /* ===== Ground system (controls feet + grass together) ===== */
+  :root{
+    --ground: 8%;        /* characters' feet baseline (desktop/tablet) */
+    --grass-sink: 12%;   /* how much the grass image dips below floor */
+  }
+
+  /* Fixed, bottom-anchored responsive stage */
+  .stage {
+    position: fixed;
+    left: 50%;
+    bottom: env(safe-area-inset-bottom, 0);
+    transform: translateX(-50%);
+    width: 100vw;                 /* always fill width */
+    aspect-ratio: 1200 / 800;     /* keep your design ratio */
+    max-height: 100dvh;           /* never exceed screen height */
+    background: #cfeeff;
+    overflow: hidden;
+  }
+
+  /* Base artwork */
+  .grass{
+    position:absolute; left:50%; transform:translateX(-50%);
+    width:120%; height:auto;
+    bottom: calc(-1 * var(--grass-sink));  /* use same system as feet */
+  }
+  .blossom { position:absolute; left:-1%; bottom:-1%; width:45%; height:auto; }
+
+  /* =========================
+     ANIMALS: hop-in from right
+     ========================= */
+
+  /* WRAPPERS = final position + width */
+  /* All feet sit on the SAME baseline; --foot gives tiny per-image tweak */
+  .pooh-wrap{
+    position:absolute; left:28%; width:14%;
+    --foot: -9%;  bottom: calc(var(--ground) + var(--foot));
+    transform:translateX(110vw);
+    animation: walk-in 3s ease-out 0s forwards; z-index:3;
+  }
+  .cow-wrap{
+    position:absolute; left:45%; width:8%;
+    --foot: 3%;  bottom: calc(var(--ground) + var(--foot));
+    transform:translateX(110vw);
+    animation: walk-in 3s ease-out .25s forwards; z-index:2;
+  }
+  .pig-wrap{
+    position:absolute; left:59%; width:13%;
+    --foot: 3%;  bottom: calc(var(--ground) + var(--foot));
+    transform:translateX(110vw);
+    animation: walk-in 3s ease-out .5s forwards; z-index:4;
+  }
+
+  /* IMAGES = fill wrapper + vertical hop while moving */
+  .pooh, .cow, .pig { display:block; width:100%; height:auto; animation: hopY .55s ease-in-out 6; }
+
+  /* horizontal travel only (slide-in) */
+  @keyframes walk-in { to { transform: translateX(0); } }
+
+  /* vertical hop only (true bounce) */
+  @keyframes hopY {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12%); }  /* tweak hop height here */
+  }
+
+  /* Bees */
+  .bee { position:absolute; left:12%; top:16%; width:19%; height:auto;
+         animation: beeFly 9s ease-in-out infinite alternate; z-index:5; }
+  @keyframes beeFly{
+    0%{transform:translate(0,0) rotate(0deg)}
+    25%{transform:translate(12vw,-3vh) rotate(8deg)}
+    50%{transform:translate(24vw, 2vh) rotate(-6deg)}
+    75%{transform:translate(36vw,-3vh) rotate(10deg)}
+    100%{transform:translate(44vw, 1vh) rotate(-4deg)}
+  }
+
+  .bee2{
+    position:absolute;
+    left:40%; top:28%; width:14%; z-index:5; pointer-events:none;
+    animation: beeFly2 11s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes beeFly2{
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    20%  { transform: translate(-10vw, -2vh) rotate(-8deg); }
+    40%  { transform: translate(-22vw,  3vh) rotate(6deg); }
+    60%  { transform: translate(-32vw, -1vh) rotate(-10deg); }
+    80%  { transform: translate(-40vw,  4vh) rotate(4deg); }
+    100% { transform: translate(-46vw,  1vh) rotate(-6deg); }
+  }
+
+  /* Hunny pot */
+  .hunny {
+    position: absolute;
+    right: 10%;
+    width: 18%;
+    height: auto;
+    bottom: calc(var(--ground) + 6%);
+    z-index:4;
+  }
+
+  /* Sun (with About cloud attached) */
+  .sun {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    width: 30%;
+    height: auto;
+    z-index: 999;        /* stay above bees */
+    pointer-events: auto;/* art only; we use a hit-area for clicks */
+  }
+
+  /* Shadows for pop */
+  .pooh, .cow, .pig, .hunny { filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
+
+  /* Invisible click/tap hit areas */
+  .hit{
+    position:absolute; border:0; background:transparent; cursor:pointer;
+    z-index:1000; /* above art */
+    padding:0;
+  }
+  .hit:active{ transform: scale(.98); }
+
+  /* Place hit-areas approximately over the art */
+  .hunny-hit{ right:10%; bottom:calc(var(--ground) + 6%); width:18%; height:22%; }
+  .sun-hit  { right:5%;  top:5%;  width:30%; height:28%; }
+
+  /* Hover hints (desktop only) */
+  @media (hover:hover){
+    .hunny-hit:hover, .sun-hit:hover{ outline:2px dashed rgba(0,0,0,.12); outline-offset:4px; }
+  }
+
+  /* Slide-in panel */
+  .panel{
+    position:fixed; right:3%; bottom:3%;
+    width:min(520px,92vw);
+    background:#fff; border-radius:16px; padding:20px 24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+    z-index:1200;
+    translate:0 12px; opacity:0; visibility:hidden;
+    transition:opacity .22s ease, translate .22s ease, visibility .22s;
+  }
+  .panel.open{ opacity:1; translate:0 0; visibility:visible; }
+  .panel .close{
+    position:absolute; top:8px; right:10px;
+    font-size:22px; border:0; background:transparent; cursor:pointer;
+    line-height:1;
+  }
+  .panel h2{ margin:0 0 8px; }
+  .panel p{ margin:6px 0; line-height:1.45; }
+
+  /* Small screens: keep everyone glued to ground by changing variables only */
+  @media (max-width: 640px), (max-aspect-ratio: 10/16){
+    :root{ --ground: 7%; --grass-sink: 9%; }
+    .bee  { width:16%; top:14%; }
+    .bee2 { width:12%; top:26%; left:60%; }
+    .sun  { width:34%; top:4%; right:4%; }
+    .sun-hit{ width:34%; height:30%; top:4%; right:4%; }
+  }
+.hunny {
+  transition: transform 0.3s ease;
+}
+
+@media (hover:hover) {
+  .hunny-hit:hover + .hunny,
+  .hunny:hover {
+    transform: scale(1.08) rotate(-2deg);
+    filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
+  }
+}
+  .sun-link .sun {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+.sun-link:hover .sun {
+  transform: scale(1.08) rotate(-2deg);
+  filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
+}
+  /* --- Debug baseline (turn on while tuning)
+  .baseline{
+    position:absolute; left:0; right:0;
+    bottom: var(--ground);
+    height:2px; background: rgba(0,0,0,.15);
+    pointer-events:none;
+  } */
+</style>
+</head>
+<body>
+  <main class="stage">
+    <img src="grass.png"   class="grass"   alt="">
+    <img src="blossom.png" class="blossom" alt="">
+
+    <!-- Pooh (wrapper moves, image hops) -->
+    <div class="pooh-wrap"><img src="pooh.png" class="pooh" alt="Pooh"></div>
+    <!-- Cow -->
+    <div class="cow-wrap"><img src="cow.png" class="cow" alt="Cow"></div>
+    <!-- Pig -->
+    <div class="pig-wrap"><img src="pig.png" class="pig" alt="Pig"></div>
+
+    <!-- Bees -->
+    <img src="bee1.png" class="bee"  alt="">
+    <img src="bee2.png" class="bee2" alt="Bee 2">
+
+    <!-- Hunny pot art (link to Projects) -->
+    <a href="projects.html" aria-label="Projects">
+      <img src="hunny.png" class="hunny" alt="Projects">
+    </a>
+
+    <!-- Sun+Cloud art (link to About page) -->
+    <a href="about.html" class="sun-link" aria-label="About Nada">
+      <img src="sun.png" class="sun" alt="About Me">
+    </a>
+
+    <!-- About panel (optional, can remove if not needed anymore) -->
+    <section id="aboutPanel" class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <button class="close" aria-label="Close About">×</button>
+      <h2 id="aboutTitle">About Nada</h2>
+      <p>Developer & designer who loves playful, hand-drawn interfaces, Python, and turning ideas into interactive stories.</p>
+      <p>Email: <a href="mailto:you@example.com">you@example.com</a> · Resume: <a href="resume.pdf" target="_blank" rel="noopener">PDF</a></p>
+    </section>
+  </main>
+
+<script>
+  // About panel close (only runs if the panel exists)
+  const panel = document.getElementById('aboutPanel');
+  if (panel) {
+    const closeBtn = panel.querySelector('.close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') panel.classList.remove('open');
+      });
+    }
+  }
+</script>
+</body>
+</html>

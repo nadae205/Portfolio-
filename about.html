@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Nada — About</title>
+  <style>
+    :root{
+      --sky: #b198dd;          /* deep stormy purple */
+      --panel:#ffffffee;      /* translucent about card */
+      --accent:#f9d86d;       /* honey yellow for headings */
+    }
+
+    /* page */
+    html,body{height:100%;margin:0}
+    body{
+      background: radial-gradient(120% 140% at 30% -10%, #8b73b8 0%, var(--sky) 55%, #1a1426 100%);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:#f7f5ff;
+      overflow:hidden;              /* we’re a single “scene” */
+    }
+
+    header{
+      position:relative;
+      z-index:20;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 22px;
+      color:#f7f5ff;
+    }
+    header a{
+      color:#f7f5ff; text-decoration:none; font-weight:600;
+      padding:6px 10px; border-radius:8px; background:#ffffff1a;
+      backdrop-filter: blur(3px);
+    }
+    header a:hover{ background:#ffffff2a; }
+
+    .scene{
+      position:relative; width:100vw; height:calc(100vh - 64px);
+      overflow:hidden;
+    }
+
+    /* clouds */
+    .cloud{ position:absolute; top:0; width:min(44vw,520px); height:auto; opacity:.95; z-index:3; }
+    .cloud.one{ left:0%; transform:translateY(-6%); }
+    .cloud.two{ right:0%; transform:translateY(-2%) scaleX(-1); }
+
+    /* umbrella on the “ground” */
+
+      .city {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-height: 45vh;   /* not too tall */
+    bottom: 0%;        /* a little lower than the midpoint */
+    z-index: 2;
+  }
+      /* Rainbow above the city */
+  .rainbow {
+    position: absolute;
+    left: 10%;
+    transform: translateX(-50%);
+    width: 70%;
+    top: 8%;           /* near the top */
+    z-index: 3;        /* above city */
+    pointer-events: none; /* purely visual */
+  }
+
+
+    /* about card sitting above the umbrella */
+    .about-card {
+  position: absolute;
+  left: 50%;
+  bottom: 37%;
+  transform: translateX(-50%);
+  width: min(880px, 86vw);
+  min-height: 360px;       /* 🔥 ensures the card is tall */
+  background: var(--panel);
+  color: #8a7dac;
+  border-radius: 18px;
+  padding: 30px 28px;      /* make padding bigger too */
+  z-index: 7;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  backdrop-filter: blur(4px);
+}
+    .about-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 3.5vw, 40px);  /* 🔥 bigger title */
+  color: var(--accent);
+}
+
+.about-card p {
+  margin: 10px 0 0;
+  font-size: clamp(22px, 2vw, 29px);    /* 🔥 bigger body text */
+  line-height: 1.6;                     /* keep it readable */
+}
+    /* rain layers (three speeds) */
+    .rain, .rain::before, .rain::after{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none; z-index:4;
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,.22) 0 2px, transparent 2px 100%);
+      background-size: 1.5px 10px;
+      transform: skewX(-15deg);
+      opacity:.45;
+      animation: rainA .7s linear infinite;
+    }
+    .rain::before{
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,.16) 0 2px, transparent 2px 100%);
+      background-size: 1px 8px;
+      opacity:.35;
+      animation: rainB .9s linear infinite;
+    }
+    .rain::after{
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,.10) 0 2px, transparent 2px 100%);
+      background-size: 1px 12px;
+      opacity:.28;
+      animation: rainC 1.1s linear infinite;
+    }
+    @keyframes rainA{ from{background-position:0 0} to{background-position:-20px 40px} }
+    @keyframes rainB{ from{background-position:0 0} to{background-position:-16px 36px} }
+    @keyframes rainC{ from{background-position:0 0} to{background-position:-12px 30px} }
+
+    /* lightning flashes */
+    .lightning{
+      position:absolute; inset:0; z-index:5;
+      background: radial-gradient(120% 120% at 50% 10%, rgba(255,255,255,.95), rgba(255,255,255,0) 60%);
+      mix-blend-mode: screen;
+      opacity:0; pointer-events:none;
+      animation: flash 9s infinite;
+    }
+    /* two quick flashes at randomish times */
+    @keyframes flash{
+      0%, 8%, 8.6%, 42%, 42.5%, 100% { opacity:0; }
+      8.3%, 42.2% { opacity:.9; }
+    }
+
+    /* responsive nudges */
+    @media (max-width: 640px){
+      .cloud{ width:min(60vw, 420px); }
+      .about-card{ bottom:26%; }
+      .umbrella{ width:min(62vw, 440px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>🌩️ About Nada</div>
+    <!-- explicit back link -->
+    <a href="index.html" aria-label="Back to Spring">← Back to Spring</a>
+  </header>
+
+  <main class="scene">
+    <!-- clouds -->
+    <img src="cloud1.png" class="cloud one" alt="">
+    <img src="cloud2.png" class="cloud two" alt="">
+
+    <!-- rain & lightning overlays -->
+    <div class="rain" aria-hidden="true"></div>
+    <div class="lightning" aria-hidden="true"></div>
+
+    <!-- umbrella -->
+    <img src="rainbow.png" alt="Rainbow" class="rainbow">
+    <img src="city.png" alt="City skyline" class="city">
+
+    <!-- about text -->
+    <section class="about-card" role="dialog" aria-labelledby="aboutTitle">
+      <h1 id="aboutTitle">Hi, I’m Nada 👋</h1>
+      <p>I design and build playful, performant web experiences end-to-end.
+    I’m comfortable moving between backend logic and frontend polish—planning data flows,
+    modeling APIs, and then bringing them to life with thoughtful UI/UX and motion.</p>
+      <p>I’m also a strong multitasker and team player, able to balance multiple projects
+    while staying detail-oriented, collaborative, and calm under pressure.
+
+      <p>Say hi: <a href="mailto:you@example.com">nadaeldin1@gmail.com</a></p>
+    </section>
+  </main>
+</body>
+</html>
