@@ -1,11 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Nada — Spring (bottom-anchored)</title>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Nada — Spring (bottom-anchored)</title>
+
+  <style>
+  /* =========================
+     DESKTOP / DEFAULT STYLES
+     ========================= */
+
   /* Page background only; no flex pushing */
   html, body {
     margin: 0;
@@ -104,44 +109,45 @@
     100% { transform: translate(-46vw,  1vh) rotate(-6deg); }
   }
 
- /* Hunny & Sun: clickable wrappers handle position + z-index */
-.hunny-link{
-  position:absolute;
-  right:10%;
-  bottom:calc(var(--ground) + 6%);
-  width:18%;
-  z-index:20;
-  display:block;
-}
-.sun-link{
-  position:absolute;
-  top:5%;
-  right:5%;
-  width:30%;
-  z-index:21;
-  display:block;
-}
-
-/* Images just fill their wrappers (no absolute, no pointer-events hacks) */
-.hunny, .sun{
-  display:block;
-  width:100%;
-  height:auto;
-  transition: transform .3s ease, filter .3s ease;
-}
-.hunny{ filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
-
-@media (hover:hover){
-  .hunny-link:hover .hunny,
-  .sun-link:hover .sun{
-    transform: scale(1.08) rotate(-2deg);
-    filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
+  /* Hunny & Sun: clickable wrappers handle position + z-index */
+  .hunny-link{
+    position:absolute;
+    right:10%;
+    bottom:calc(var(--ground) + 6%);
+    width:18%;
+    z-index:20;
+    display:block;
   }
-}
+  .sun-link{
+    position:absolute;
+    top:5%;
+    right:5%;
+    width:30%;
+    z-index:21;
+    display:block;
+  }
+
+  /* Images just fill their wrappers */
+  .hunny, .sun{
+    display:block;
+    width:100%;
+    height:auto;
+    transition: transform .3s ease, filter .3s ease;
+  }
+  .hunny{ filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
+
+  @media (hover:hover){
+    .hunny-link:hover .hunny,
+    .sun-link:hover .sun{
+      transform: scale(1.08) rotate(-2deg);
+      filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
+    }
+  }
+
   /* Shadows for pop */
   .pooh, .cow, .pig, .hunny { filter: drop-shadow(4px 6px 3px rgba(0,0,0,0.25)); }
 
-  /* Invisible click/tap hit areas */
+  /* Invisible click/tap hit areas (kept if you still use them elsewhere) */
   .hit{
     position:absolute; border:0; background:transparent; cursor:pointer;
     z-index:1000; /* above art */
@@ -149,16 +155,7 @@
   }
   .hit:active{ transform: scale(.98); }
 
-  /* Place hit-areas approximately over the art */
-  .hunny-hit{ right:10%; bottom:calc(var(--ground) + 6%); width:18%; height:22%; }
-  .sun-hit  { right:5%;  top:5%;  width:30%; height:28%; }
-
-  /* Hover hints (desktop only) */
-  @media (hover:hover){
-    .hunny-hit:hover, .sun-hit:hover{ outline:2px dashed rgba(0,0,0,.12); outline-offset:4px; }
-  }
-
-  /* Slide-in panel */
+  /* Slide-in panel (optional) */
   .panel{
     position:fixed; right:3%; bottom:3%;
     width:min(520px,92vw);
@@ -177,71 +174,70 @@
   .panel h2{ margin:0 0 8px; }
   .panel p{ margin:6px 0; line-height:1.45; }
 
-  /* Small screens: keep everyone glued to ground by changing variables only */
-  @media (max-width: 640px), (max-aspect-ratio: 10/16){
-    :root{ --ground: 7%; --grass-sink: 9%; }
-    .bee  { width:16%; top:14%; }
-    .bee2 { width:12%; top:26%; left:60%; }
-    .sun  { width:34%; top:4%; right:4%; }
-    .sun-hit{ width:34%; height:30%; top:4%; right:4%; }
-  }
-.hunny {
-  transition: transform 0.3s ease;
-}
+  /* ----------------------------------------------------------
+     === MOBILE: small screens overrides (EDIT THESE NUMBERS) ===
+     Everything below only affects phones/small screens.
+     To tweak sizes, just change the vw/% values next to each knob.
+     ---------------------------------------------------------- */
 
-@media (hover:hover) {
-  .hunny-hit:hover + .hunny,
-  .hunny:hover {
-    transform: scale(1.08) rotate(-2deg);
-    filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
-  }
-}
-  .sun-link .sun {
-  transition: transform 0.3s ease, filter 0.3s ease;
-  cursor: pointer;
-}
-.sun-link:hover .sun {
-  transform: scale(1.08) rotate(-2deg);
-  filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
-}
-/* ==== MOBILE INLINE FALLBACK (works even if mobile.css fails) ==== */
-@media (max-width: 768px){
-  /* keep grass visible */
-  :root{ --grass-sink: 6%; }
+  /* We scope to html.is-mobile to make sure these apply on phones. */
+  html.is-mobile {
 
-  .grass{
-    bottom: calc(-1 * var(--grass-sink));
-    width: 140%;
+    /* 1) Ground variables — keeps feet/grass aligned on phones
+          (increase/decrease to show more grass) */
+    --ground: 7%;
+    --grass-sink: 9%;
   }
 
-  /* make sun tappable + bigger */
-  .sun-link{ width: 40%; top: 3%; right: 3%; }
-  .sun{ width: 100%; }
-
-  /* make hunny bigger and higher */
-  .hunny-link{
-    right: 6%;
-    bottom: calc(var(--ground) + 4%);
-    width: 28%;
-    z-index: 1001;
+  /* 2) Grass — make it wider & ensure it stays visible */
+  html.is-mobile .grass{
+    width: 140%;                          /* ← KNOB: grass width on phones */
+    bottom: calc(-1 * var(--grass-sink)); /* keep revealing the grass */
   }
-  .hunny{ width: 100%; }
 
-  /* optional: tuck characters a bit so they fit */
-  .pooh-wrap{ left: 22%; width: 20%; }
-  .cow-wrap { left: 44%; width: 12%; }
-  .pig-wrap { left: 62%; width: 19%; }
-}
-  /* --- Debug baseline (turn on while tuning)
-  .baseline{
-    position:absolute; left:0; right:0;
-    bottom: var(--ground);
-    height:2px; background: rgba(0,0,0,.15);
-    pointer-events:none;
-  } */
-</style>
-  <link rel="stylesheet" href="mobile.css" media="(max-width: 640px)">
+  /* 3) Sun — larger tap target on phones */
+  html.is-mobile .sun-link{
+    right: 4vw;                           /* ← KNOB: sun wrapper right offset */
+    top: 3vh;                             /* ← KNOB: sun wrapper top offset */
+    width: 44vw;                          /* ← KNOB: sun size on phones */
+  }
+  html.is-mobile .sun{ width: 100%; height: auto; }
+
+  /* 4) Hunny pot — size/position for phones */
+  html.is-mobile .hunny-link{
+    right: 6vw;                           /* ← KNOB: move pot left/right */
+    bottom: calc(var(--ground) + 3%);     /* ← KNOB: raise/lower pot */
+    width: 50vw;                          /* ← KNOB: pot size on phones */
+    z-index: 20;
+  }
+  html.is-mobile .hunny{ width: 100%; height: auto; }
+
+  /* 5) Bees — slightly smaller so they don’t cover UI */
+  html.is-mobile .bee  { width: 16%; top: 14%; }   /* ← KNOB: bee1 size/top */
+  html.is-mobile .bee2 { width: 12%; top: 26%; left: 60%; } /* ← KNOBs */
+
+  /* 6) Characters — optional tighter layout on phones
+        (adjust only if they crowd your UI) */
+  html.is-mobile .pooh-wrap{ left: 22%; width: 20%; } /* ← KNOBs */
+  html.is-mobile .cow-wrap { left: 44%; width: 12%; }
+  html.is-mobile .pig-wrap { left: 62%; width: 19%; }
+
+  /* 7) Optional: blossom smaller if it crowds the screen */
+  html.is-mobile .blossom{ width: 50%; left: -4%; bottom: -3%; }
+  </style>
+
+  <!-- Ensure mobile overrides always apply on phones/simulators -->
+  <script>
+    (function () {
+      // If width is small OR very tall/narrow screens, treat as mobile
+      const isPhone =
+        window.matchMedia("(max-width: 800px)").matches ||
+        window.matchMedia("(max-aspect-ratio: 10/16)").matches;
+      if (isPhone) document.documentElement.classList.add("is-mobile");
+    })();
+  </script>
 </head>
+
 <body>
   <main class="stage">
     <img src="grass.png"   class="grass"   alt="">
@@ -268,7 +264,7 @@
       <img src="sun.png" class="sun" alt="About Me">
     </a>
 
-    <!-- About panel (optional, can remove if not needed anymore) -->
+    <!-- About panel (optional, you can remove this if unused now) -->
     <section id="aboutPanel" class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
       <button class="close" aria-label="Close About">×</button>
       <h2 id="aboutTitle">About Nada</h2>
@@ -277,18 +273,18 @@
     </section>
   </main>
 
-<script>
-  // About panel close (only runs if the panel exists)
-  const panel = document.getElementById('aboutPanel');
-  if (panel) {
-    const closeBtn = panel.querySelector('.close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => panel.classList.remove('open'));
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') panel.classList.remove('open');
-      });
+  <script>
+    // About panel close (only runs if the panel exists)
+    const panel = document.getElementById('aboutPanel');
+    if (panel) {
+      const closeBtn = panel.querySelector('.close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') panel.classList.remove('open');
+        });
+      }
     }
-  }
-</script>
+  </script>
 </body>
 </html>
