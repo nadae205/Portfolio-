@@ -204,7 +204,34 @@
   transform: scale(1.08) rotate(-2deg);
   filter: drop-shadow(6px 8px 5px rgba(0,0,0,0.35));
 }
+/* ==== MOBILE INLINE FALLBACK (works even if mobile.css fails) ==== */
+@media (max-width: 768px){
+  /* keep grass visible */
+  :root{ --grass-sink: 6%; }
 
+  .grass{
+    bottom: calc(-1 * var(--grass-sink));
+    width: 140%;
+  }
+
+  /* make sun tappable + bigger */
+  .sun-link{ width: 40%; top: 3%; right: 3%; }
+  .sun{ width: 100%; }
+
+  /* make hunny bigger and higher */
+  .hunny-link{
+    right: 6%;
+    bottom: calc(var(--ground) + 4%);
+    width: 28%;
+    z-index: 1001;
+  }
+  .hunny{ width: 100%; }
+
+  /* optional: tuck characters a bit so they fit */
+  .pooh-wrap{ left: 22%; width: 20%; }
+  .cow-wrap { left: 44%; width: 12%; }
+  .pig-wrap { left: 62%; width: 19%; }
+}
   /* --- Debug baseline (turn on while tuning)
   .baseline{
     position:absolute; left:0; right:0;
