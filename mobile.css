@@ -40,7 +40,7 @@ html, body { height: 100dvh; overflow: hidden; }
 
 /* Hunny pot: bigger, raised, always above grass */
 .hunny{
-  width: 26%;
+  width: 30%;
   right: 6%;
   bottom: calc(var(--ground) + 4%);
   z-index: 20;
