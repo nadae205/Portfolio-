@@ -1,6 +1,7 @@
 /* mobile.css — loaded only on small screens
    Targets your existing classes; no HTML changes needed */
-
+/* TEMP TEST */
+body { outline: 4px solid red; }
 /* Make sure the viewport height is stable on iOS */
 html, body { height: 100dvh; overflow: hidden; }
 
